@@ -48,8 +48,8 @@ classifiers = [
 ]
 
 dependencies = [
-    "genie==25.1",
-    "pyats==25.1",
+    "genie==25.9",
+    "pyats==25.9",
 ]
 
 [dependency-groups]
