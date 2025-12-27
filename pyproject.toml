@@ -8,7 +8,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "pyats-genie-command-parse"
 dynamic = ["version", "readme"]
-requires-python = ">=3.9"
+requires-python = ">=3.12"
 description = "Run genie parsers directly."
 keywords = [
     "pyATS",
@@ -40,16 +40,13 @@ classifiers = [
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3 :: Only",
-    "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: 3.13",
 ]
 
 dependencies = [
-    "genie==25.1",
-    "pyats==25.1",
+    "genie==25.11",
+    "pyats==25.11",
 ]
 
 [dependency-groups]
