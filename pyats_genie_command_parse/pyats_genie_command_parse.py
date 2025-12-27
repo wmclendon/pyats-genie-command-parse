@@ -164,10 +164,28 @@ class GenieCommandParse:
             raise TypeError(f"show_command must be a string received a {type(show_command)}")
 
         mock_device = self.MockDevice(self.show_output_data)
+        normalized_command = self.__remove_extra_spaces(show_command)
         try:
-            found_parser = get_parser(self.__remove_extra_spaces(show_command), self.mock_pyats_device)[0]
-            return found_parser(device=mock_device).parse()
-
+            found_parser = get_parser(normalized_command, self.mock_pyats_device)[0]
+            parser_instance = found_parser(device=mock_device)
+        
+            # Try calling parse() first (works for most parsers)
+            try:
+                return parser_instance.parse()
+            except TypeError as e:
+                # If parse() fails because cli() needs command argument, call cli() directly
+                error_msg = str(e)
+                if "missing" in error_msg and "required positional argument" in error_msg and "command" in error_msg:
+                    # Check if parser has cli method that accepts command
+                    if hasattr(parser_instance, 'cli'):
+                        import inspect
+                        sig = inspect.signature(parser_instance.cli)
+                        if 'command' in sig.parameters:
+                            # Call cli() with command and output
+                            return parser_instance.cli(command=normalized_command, output=self.show_output_data)
+                # Re-raise if it's not the command argument issue
+                raise
+            
         except Exception as error:
             raise ModuleNotFoundError(
                 f"Could not find module_name for command {show_command} " f"for nos {self.nos} from genie: {error}"
